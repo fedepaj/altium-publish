@@ -1,0 +1,121 @@
+# ═══════════════════════════════════════════════════════════
+# altium-publish.yaml
+# ═══════════════════════════════════════════════════════════
+# Pre-configured for a typical Altium OutJob release structure:
+#   Release/
+#   ├── DOCS/ (Schematics, Draftsman, STEP)
+#   └── FAB/  (BOM, Gerber, GerberX2, NC Drill, ODB, Pick Place)
+# Adjust paths and patterns to match your project's output layout.
+
+project:
+  name: "My PCB Project"
+  description: "Short project description"
+  author: ""
+  license: ""
+  repo: "username/my-pcb-project"
+  version_prefix: "v"
+
+release_dir: "Release"
+
+# ── File mappings (match YOUR OutJob structure) ──────────
+files:
+  schematics:
+    path: "DOCS/Schematic Print"
+    patterns:
+      - "*.PDF"
+      - "*.pdf"
+
+  draftsman:
+    path: "DOCS/PCBDrawing"
+    patterns:
+      - "*.PDF"
+      - "*.pdf"
+
+  bom:
+    path: "FAB/BOM"
+    patterns:
+      - "*.xlsx"
+      - "*.csv"
+
+  # Legacy Gerber (RS-274X)
+  gerbers:
+    path: "FAB/Gerber"
+    patterns:
+      - "*.GBL"
+      - "*.GBO"
+      - "*.GBP"
+      - "*.GBS"
+      - "*.GTL"
+      - "*.GTO"
+      - "*.GTP"
+      - "*.GTS"
+      - "*.GKO"
+
+  # GerberX2 (preferred for rendering, more descriptive names)
+  gerber_x2:
+    path: "FAB/GerberX2"
+    patterns:
+      - "*.gbr"
+
+  nc_drill:
+    path: "FAB/NC Drill"
+    patterns:
+      - "*.TXT"
+      - "*.DRR"
+      - "*.LDP"
+
+  step:
+    path: "DOCS/ExportSTEP"
+    patterns:
+      - "*.step"
+      - "*.stp"
+
+  pick_place:
+    path: "FAB/Pick Place"
+    patterns:
+      - "*.csv"
+      - "*.txt"
+
+  odb:
+    path: "FAB/ODB"
+    patterns:
+      - "*.tgz"
+      - "*.zip"
+
+# ── Conversion ──────────────────────────────────────────
+convert:
+  schematic_format: "svg"            # "svg" (vector, zoomable) or "webp" (raster)
+  pdf_dpi: 200                       # DPI for raster fallback
+  pdf_format: "webp"                 # Raster format: "webp" or "png"
+  step_format: "glb"                 # "glb" (needs cadquery/trimesh) or "keep"
+  bom_interactive: true              # Searchable/sortable BOM table
+  gerber_render: true                # Render gerber layer previews
+  gerber_tool: "auto"                # "auto", "tracespace", "gerbv", or "pygerber"
+
+# ── Site appearance ────────────────────────────────────
+site:
+  title: ""                          # Defaults to project.name
+  theme: "dark"                      # "dark" or "light"
+  accent_color: "#00d4aa"            # Primary accent color
+  sections:                          # Tabs shown in the UI (order matters)
+    - schematics
+    - draftsman
+    - pcb3d
+    - bom
+    - gerbers
+    - downloads
+
+# ── GitHub integration ─────────────────────────────────
+github:
+  create_release: true               # Create GitHub Release on publish
+  draft: false                       # Create as draft release
+  upload_assets: true                # Attach files to the release
+  asset_patterns:
+    - "*.zip"
+    - "*.pdf"
+    - "*.step"
+    - "*.xlsx"
+  pages_branch: "gh-pages"
+  pages_dir: "docs"
+
+output_dir: "docs"

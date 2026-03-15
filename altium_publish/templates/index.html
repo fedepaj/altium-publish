@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{THEME}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PROJECT_NAME}}</title>
+  <meta name="description" content="{{PROJECT_DESCRIPTION}}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: {{ACCENT_COLOR}};
+      --accent-hover: color-mix(in srgb, {{ACCENT_COLOR}} 85%, black);
+      --accent-bg: {{ACCENT_COLOR}}0a;
+      --accent-bg-hover: {{ACCENT_COLOR}}18;
+      --accent-text: {{ACCENT_COLOR}};
+      --bg-primary: #f5f6f8;
+      --bg-secondary: #ffffff;
+      --bg-sidebar: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9fafb;
+      --bg-elevated: #f3f4f6;
+      --border: #e5e7eb;
+      --border-subtle: #f0f1f3;
+      --text-primary: #111827;
+      --text-secondary: #4b5563;
+      --text-muted: #9ca3af;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+      --sidebar-w: 260px;
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+    [data-theme="dark"] {
+      --accent: {{ACCENT_COLOR_DARK}};
+      --accent-hover: color-mix(in srgb, {{ACCENT_COLOR_DARK}} 85%, black);
+      --accent-bg: {{ACCENT_COLOR_DARK}}0a;
+      --accent-bg-hover: {{ACCENT_COLOR_DARK}}18;
+      --accent-text: {{ACCENT_COLOR_DARK}};
+      --bg-primary: #0f1117;
+      --bg-secondary: #171921;
+      --bg-sidebar: #13151d;
+      --bg-card: #1b1e2a;
+      --bg-card-hover: #232738;
+      --bg-elevated: #1e2130;
+      --border: #282b3a;
+      --border-subtle: #1e2130;
+      --text-primary: #e5e7eb;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-lg: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary); color: var(--text-primary);
+      line-height: 1.5; height: 100%; overflow: hidden;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    button { font-family: inherit; }
+
+    /* ═══ APP LAYOUT ═══ */
+    .app { display: flex; height: 100vh; }
+
+    /* ═══ SIDEBAR ═══ */
+    .sidebar {
+      width: var(--sidebar-w); flex-shrink: 0; background: var(--bg-sidebar);
+      border-right: 1px solid var(--border); display: flex; flex-direction: column;
+      position: fixed; top: 0; bottom: 0; left: 0; z-index: 200;
+      overflow-y: auto; overflow-x: hidden;
+      scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+    }
+    .sidebar-header {
+      padding: 1.5rem 1.25rem 1rem; border-bottom: 1px solid var(--border);
+    }
+    .sidebar-header h1 {
+      font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em;
+      margin-bottom: 0.25rem; line-height: 1.3;
+    }
+    .sidebar-header p {
+      font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;
+    }
+    .sidebar-nav { flex: 1; padding: 0.75rem 0.75rem; }
+    .sidebar-label {
+      font-size: 0.65rem; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 0.5rem 0.5rem 0.35rem; margin-top: 0.5rem;
+    }
+    .sidebar-label:first-child { margin-top: 0; }
+    .nav-item {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.5rem 0.65rem; border-radius: var(--radius);
+      font-size: 0.82rem; font-weight: 450; color: var(--text-secondary);
+      cursor: pointer; transition: all 0.15s; text-decoration: none;
+      border: none; background: none; width: 100%; text-align: left;
+    }
+    .nav-item:hover { background: var(--bg-elevated); color: var(--text-primary); }
+    .nav-item.active {
+      background: var(--accent-bg-hover); color: var(--accent-text);
+      font-weight: 600;
+    }
+    .nav-item .nav-icon {
+      width: 18px; height: 18px; display: flex; align-items: center;
+      justify-content: center; font-size: 0.9rem; opacity: 0.7; flex-shrink: 0;
+    }
+    .nav-item.active .nav-icon { opacity: 1; }
+    .nav-item .nav-badge {
+      margin-left: auto; font-size: 0.65rem; background: var(--bg-elevated);
+      padding: 0.1rem 0.45rem; border-radius: 10px; color: var(--text-muted);
+      font-weight: 500;
+    }
+    .nav-item.active .nav-badge { background: var(--accent-bg); color: var(--accent-text); }
+
+    .sidebar-footer {
+      padding: 0.75rem 1rem; border-top: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .theme-toggle {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.45rem 0.6rem; border-radius: var(--radius);
+      border: 1px solid var(--border); background: var(--bg-card);
+      color: var(--text-secondary); font-size: 0.78rem; cursor: pointer;
+      transition: all 0.15s; width: 100%;
+    }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent-text); }
+    .sidebar-meta {
+      font-size: 0.7rem; color: var(--text-muted); padding: 0 0.25rem;
+    }
+    .sidebar-meta a { color: var(--accent-text); text-decoration: none; }
+    .sidebar-meta a:hover { text-decoration: underline; }
+
+    /* ═══ MOBILE ═══ */
+    .mobile-toggle {
+      display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 300;
+      width: 40px; height: 40px; border-radius: var(--radius);
+      border: 1px solid var(--border); background: var(--bg-secondary);
+      color: var(--text-primary); font-size: 1.2rem; cursor: pointer;
+      align-items: center; justify-content: center;
+      box-shadow: var(--shadow);
+    }
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0; z-index: 150;
+      background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);
+    }
+    .sidebar-overlay.open { display: block; }
+
+    /* ═══ CONTENT ═══ */
+    .content {
+      flex: 1; margin-left: var(--sidebar-w); height: 100vh;
+      overflow: hidden; position: relative;
+    }
+    .view {
+      display: none; position: absolute; inset: 0;
+      flex-direction: column; overflow-y: auto;
+      scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+    }
+    .view.active { display: flex; }
+    .view-header {
+      padding: 1.75rem 2rem 1.25rem; border-bottom: 1px solid var(--border);
+      background: var(--bg-secondary); flex-shrink: 0;
+    }
+    .view-header h2 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+    .view-header p { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .view-body { flex: 1; padding: 1.5rem 2rem 2rem; }
+    .view-body.no-pad { padding: 0; }
+    .view-body.fill { display: flex; flex-direction: column; min-height: 0; }
+
+    /* ═══ OVERVIEW ═══ */
+    .overview-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.75rem; margin-top: 1.5rem;
+    }
+    .overview-card {
+      padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border);
+      background: var(--bg-card); cursor: pointer; transition: all 0.2s;
+    }
+    .overview-card:hover {
+      border-color: var(--accent); box-shadow: var(--shadow-lg);
+      transform: translateY(-1px);
+    }
+    .overview-card .oc-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .overview-card .oc-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .overview-card .oc-desc { font-size: 0.75rem; color: var(--text-muted); }
+    .overview-stats {
+      display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;
+    }
+    .overview-stat .os-val {
+      font-size: 1.8rem; font-weight: 700; color: var(--accent-text);
+      line-height: 1;
+    }
+    .overview-stat .os-label {
+      font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;
+    }
+
+    /* ═══ DOCUMENT VIEWER (Schematics + Draftsman) ═══ */
+    .doc-viewer { display: flex; flex-direction: column; height: 100%; }
+    .doc-toolbar {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);
+      background: var(--bg-secondary); flex-shrink: 0; flex-wrap: wrap;
+    }
+    .doc-toolbar .page-info {
+      display: flex; align-items: center; gap: 0.4rem;
+      margin-right: auto; min-width: 0;
+    }
+    .doc-toolbar .page-name {
+      font-size: 0.78rem; color: var(--text-secondary); font-weight: 500;
+      max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .doc-toolbar .page-num {
+      font-size: 0.75rem; color: var(--text-muted);
+    }
+    .tb-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.3rem 0.55rem; border-radius: 6px;
+      border: 1px solid var(--border); background: var(--bg-card);
+      color: var(--text-secondary); font-size: 0.78rem; cursor: pointer;
+      transition: all 0.12s; gap: 0.25rem; white-space: nowrap;
+      text-decoration: none;
+    }
+    .tb-btn:hover { border-color: var(--accent); color: var(--accent-text); }
+    .tb-btn:disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+    .tb-btn.active { background: var(--accent-bg-hover); color: var(--accent-text); border-color: var(--accent); }
+    .doc-viewport {
+      flex: 1; position: relative; overflow: hidden; cursor: grab;
+      background: #e8e8e8; touch-action: none; min-height: 0;
+    }
+    [data-theme="dark"] .doc-viewport { background: #1a1a2e; }
+    .doc-viewport:active { cursor: grabbing; }
+    .doc-viewport .vp-content {
+      position: absolute; transform-origin: 0 0; will-change: transform;
+    }
+    .doc-viewport .vp-content svg,
+    .doc-viewport .vp-content img {
+      display: block; pointer-events: none;
+    }
+    .doc-viewport .vp-hint {
+      position: absolute; bottom: 0.75rem; right: 0.75rem;
+      padding: 0.25rem 0.6rem; border-radius: 6px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      font-size: 0.68rem; color: var(--text-muted);
+      pointer-events: none; opacity: 0.7; transition: opacity 0.3s;
+    }
+    .doc-pages {
+      display: flex; gap: 0.35rem; padding: 0.5rem 0.75rem;
+      border-top: 1px solid var(--border); overflow-x: auto;
+      background: var(--bg-secondary); flex-shrink: 0;
+      scrollbar-width: thin;
+    }
+    .doc-page-thumb {
+      flex-shrink: 0; width: 64px; height: 44px; border-radius: 5px;
+      border: 2px solid var(--border); background: #fff; overflow: hidden;
+      cursor: pointer; transition: all 0.15s; position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .doc-page-thumb:hover { border-color: var(--text-muted); }
+    .doc-page-thumb.active { border-color: var(--accent); }
+    .doc-page-thumb .num {
+      font-size: 0.6rem; color: #888; font-weight: 600;
+    }
+
+    /* ═══ 3D VIEWER ═══ */
+    .viewer-3d { flex: 1; min-height: 400px; position: relative; background: var(--bg-card); }
+    .viewer-3d-fallback {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; height: 100%; gap: 1rem; color: var(--text-muted);
+      padding: 2rem;
+    }
+    .viewer-3d-fallback p { text-align: center; max-width: 400px; }
+    .viewer-3d-hint {
+      position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%);
+      background: var(--bg-card); padding: 0.3rem 0.8rem; border-radius: 100px;
+      font-size: 0.7rem; color: var(--text-muted); pointer-events: none;
+      border: 1px solid var(--border);
+    }
+
+    /* ═══ BOM TABLE ═══ */
+    .bom-controls {
+      display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center;
+    }
+    .bom-search-wrap { position: relative; flex: 1; min-width: 200px; }
+    .bom-search-wrap::before {
+      content: '⌕'; position: absolute; left: 0.75rem; top: 50%;
+      transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem;
+    }
+    .bom-search {
+      width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.2rem; border-radius: var(--radius);
+      border: 1px solid var(--border); background: var(--bg-card);
+      color: var(--text-primary); font-size: 0.82rem; outline: none;
+      transition: border-color 0.15s; font-family: inherit;
+    }
+    .bom-search:focus { border-color: var(--accent); }
+    .bom-stat {
+      font-size: 0.78rem; color: var(--text-muted); padding: 0.4rem 0.75rem;
+      background: var(--bg-card); border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .bom-stat strong { color: var(--accent-text); }
+    .bom-table-wrap {
+      border-radius: var(--radius-lg); border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .bom-table-scroll {
+      max-height: calc(100vh - 280px); overflow-y: auto;
+      scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+    }
+    .bom-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .bom-table thead { background: var(--bg-elevated); position: sticky; top: 0; z-index: 1; }
+    .bom-table th {
+      padding: 0.6rem 0.75rem; text-align: left; font-size: 0.7rem;
+      font-weight: 600; color: var(--text-muted); text-transform: uppercase;
+      letter-spacing: 0.04em; border-bottom: 1px solid var(--border);
+      cursor: pointer; user-select: none; white-space: nowrap;
+    }
+    .bom-table th:hover { color: var(--accent-text); }
+    .bom-table th .sort-icon { margin-left: 0.2rem; opacity: 0.3; }
+    .bom-table th.sorted .sort-icon { opacity: 1; color: var(--accent-text); }
+    .bom-table td {
+      padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+    }
+    .bom-table tbody tr { transition: background 0.1s; }
+    .bom-table tbody tr:hover { background: var(--bg-card-hover); }
+    .bom-table tbody tr:last-child td { border-bottom: none; }
+    .bom-highlight { background: var(--accent-bg-hover); color: var(--accent-text); border-radius: 2px; padding: 0 2px; }
+
+    /* ═══ GERBER VIEWER ═══ */
+    .gerber-viewer { display: flex; height: 100%; min-height: 0; }
+    .gerber-layers-panel {
+      width: 220px; flex-shrink: 0; border-right: 1px solid var(--border);
+      background: var(--bg-secondary); overflow-y: auto; padding: 0.5rem;
+      scrollbar-width: thin;
+    }
+    .gerber-layer-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0.5rem; border-radius: 6px;
+      font-size: 0.78rem; cursor: pointer; transition: background 0.1s;
+    }
+    .gerber-layer-item:hover { background: var(--bg-elevated); }
+    .gerber-layer-item input[type="checkbox"] { accent-color: var(--accent); flex-shrink: 0; }
+    .gerber-color-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .gerber-layer-name {
+      flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .gerber-viewport-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .gerber-toolbar {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);
+      background: var(--bg-secondary); flex-shrink: 0;
+    }
+    .gerber-toolbar .spacer { flex: 1; }
+    .gerber-viewport {
+      flex: 1; position: relative; overflow: hidden; cursor: grab;
+      background: #1a1a1a; touch-action: none;
+    }
+    .gerber-viewport:active { cursor: grabbing; }
+    .gv-wrapper {
+      position: absolute; transform-origin: 0 0; will-change: transform;
+    }
+    .gv-wrapper .gv-layer {
+      position: absolute; top: 0; left: 0;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+    .gv-wrapper .gv-layer svg {
+      display: block; overflow: visible;
+    }
+
+    /* ═══ IBOM ═══ */
+    .ibom-frame {
+      width: 100%; flex: 1; border: none; min-height: 0;
+      background: var(--bg-card);
+    }
+
+    /* ═══ DOWNLOADS ═══ */
+    .download-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.6rem;
+    }
+    .download-card {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem;
+      border-radius: var(--radius); border: 1px solid var(--border);
+      background: var(--bg-card); text-decoration: none; color: inherit;
+      transition: all 0.15s;
+    }
+    .download-card:hover {
+      border-color: var(--accent); background: var(--bg-card-hover);
+    }
+    .download-icon {
+      width: 36px; height: 36px; border-radius: var(--radius);
+      background: var(--accent-bg-hover); color: var(--accent-text);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .download-info { flex: 1; min-width: 0; }
+    .download-info .name {
+      font-weight: 600; font-size: 0.85rem; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .download-info .meta { font-size: 0.72rem; color: var(--text-muted); }
+
+    .empty-state {
+      text-align: center; padding: 3rem; color: var(--text-muted); font-size: 0.85rem;
+    }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%); transition: transform 0.25s ease;
+        box-shadow: none;
+      }
+      .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-lg); }
+      .mobile-toggle { display: flex; }
+      .content { margin-left: 0; }
+      .view-header { padding: 1.25rem 1rem 1rem; padding-left: 3.5rem; }
+      .view-body { padding: 1rem; }
+      .gerber-viewer { flex-direction: column; }
+      .gerber-layers-panel {
+        width: 100%; max-height: 150px; border-right: none;
+        border-bottom: 1px solid var(--border);
+        display: flex; flex-wrap: wrap; gap: 0.25rem;
+      }
+      .download-grid { grid-template-columns: 1fr; }
+      .overview-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .overview-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1 id="projectName"></h1>
+        <p id="projectDesc"></p>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+      <div class="sidebar-footer">
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"></button>
+        <div class="sidebar-meta" id="sidebarMeta"></div>
+      </div>
+    </aside>
+    <main class="content" id="content"></main>
+  </div>
+  <button class="mobile-toggle" id="mobileToggle" onclick="toggleSidebar()">&#9776;</button>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <script>
+    const D = {{SITE_DATA}};
+    let currentView = null;
+    const viewers = {};
+    const initializedViews = new Set();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar();
+      buildAllViews();
+      const first = getAvailableSections()[0];
+      if (first) showView(first.id);
+    });
+
+    /* ═══ THEME ═══ */
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('ap-theme', next);
+      updateThemeBtn();
+    }
+    function updateThemeBtn() {
+      const btn = document.getElementById('themeToggle');
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      btn.innerHTML = isDark ? '&#9788; Light mode' : '&#9790; Dark mode';
+    }
+    (function() {
+      const saved = localStorage.getItem('ap-theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+      updateThemeBtn();
+    })();
+
+    /* ═══ SIDEBAR ═══ */
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+
+    function getAvailableSections() {
+      const secs = [
+        { id:'overview', label:'Overview', icon:'&#9673;' },
+        { id:'schematics', label:'Schematics', icon:'&#9707;', check:()=>D.schematics&&D.schematics.length>0, badge:()=>D.schematics.length+' pg' },
+        { id:'draftsman', label:'Draftsman', icon:'&#9651;', check:()=>D.draftsman&&D.draftsman.length>0 },
+        { id:'pcb3d', label:'3D Model', icon:'&#11042;', check:()=>!!D.step },
+        { id:'bom', label:'BOM', icon:'&#9776;', check:()=>!!D.bom },
+        { id:'gerbers', label:'Gerbers', icon:'&#9638;', check:()=>D.gerber_layers&&D.gerber_layers.length>0, badge:()=>D.gerber_layers.length+' layers' },
+        { id:'ibom', label:'Interactive BOM', icon:'&#9881;', check:()=>!!D.ibom },
+        { id:'downloads', label:'Downloads', icon:'&#8595;', check:()=>D.downloads&&D.downloads.length>0, badge:()=>D.downloads.length },
+      ];
+      return secs.filter(s => !s.check || s.check());
+    }
+
+    function renderSidebar() {
+      const p = D.project;
+      document.getElementById('projectName').textContent = p.name;
+      document.getElementById('projectDesc').textContent = p.description || '';
+
+      const secs = getAvailableSections();
+      const navHtml = '<div class="sidebar-label">Navigation</div>' +
+        secs.map(s => {
+          const badge = s.badge ? `<span class="nav-badge">${s.badge()}</span>` : '';
+          return `<button class="nav-item" data-view="${s.id}" onclick="showView('${s.id}')">
+            <span class="nav-icon">${s.icon}</span>${s.label}${badge}</button>`;
+        }).join('');
+      document.getElementById('sidebarNav').innerHTML = navHtml;
+
+      const meta = [];
+      if (p.author) meta.push(p.author);
+      if (p.license) meta.push(p.license);
+      if (p.repo_url) meta.push(`<a href="${p.repo_url}" target="_blank">GitHub &#8599;</a>`);
+      document.getElementById('sidebarMeta').innerHTML = meta.join(' &middot; ');
+    }
+
+    /* ═══ VIEW SWITCHING ═══ */
+    function showView(id) {
+      if (currentView === id) return;
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const view = document.getElementById('view-' + id);
+      if (view) view.classList.add('active');
+      const nav = document.querySelector(`.nav-item[data-view="${id}"]`);
+      if (nav) nav.classList.add('active');
+      currentView = id;
+      if (!initializedViews.has(id)) {
+        initView(id);
+        initializedViews.add(id);
+      }
+      // Close mobile sidebar
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('open');
+    }
+
+    function initView(id) {
+      switch(id) {
+        case 'schematics':
+          if (D.schematics.length) viewers.sch = new DocViewer('schViewport', D.schematics, 'svg');
+          break;
+        case 'draftsman':
+          if (D.draftsman.length) viewers.draft = new DocViewer('draftViewport', D.draftsman, D.draftsman_format || 'raster');
+          break;
+        case 'pcb3d': init3DViewer(); break;
+        case 'bom': loadBOM(); break;
+        case 'gerbers': initGerberViewer(); break;
+      }
+    }
+
+    /* ═══ BUILD ALL VIEWS ═══ */
+    function buildAllViews() {
+      const main = document.getElementById('content');
+      let h = '';
+      const secs = getAvailableSections();
+      for (const s of secs) {
+        switch(s.id) {
+          case 'overview': h += buildOverview(); break;
+          case 'schematics': h += buildDocViewer('schematics', 'Schematics', D.schematics, 'sch'); break;
+          case 'draftsman': h += buildDocViewer('draftsman', 'Draftsman', D.draftsman, 'draft'); break;
+          case 'pcb3d': h += build3DView(); break;
+          case 'bom': h += buildBOMView(); break;
+          case 'gerbers': h += buildGerberView(); break;
+          case 'ibom': h += buildIBOMView(); break;
+          case 'downloads': h += buildDownloadsView(); break;
+        }
+      }
+      main.innerHTML = h;
+    }
+
+    /* ═══ OVERVIEW ═══ */
+    function buildOverview() {
+      const secs = getAvailableSections().filter(s => s.id !== 'overview');
+      const cards = secs.map(s =>
+        `<div class="overview-card" onclick="showView('${s.id}')">
+          <div class="oc-icon">${s.icon}</div>
+          <div class="oc-title">${s.label}</div>
+          <div class="oc-desc">${s.badge ? s.badge() : 'View'}</div>
+        </div>`
+      ).join('');
+
+      const stats = [];
+      if (D.schematics.length) stats.push({ val: D.schematics.length, label: 'Schematic Pages' });
+      if (D.gerber_layers.length) stats.push({ val: D.gerber_layers.length, label: 'Gerber Layers' });
+      if (D.downloads.length) stats.push({ val: D.downloads.length, label: 'Downloads' });
+
+      const statsHtml = stats.length ? `<div class="overview-stats">${stats.map(s =>
+        `<div class="overview-stat"><div class="os-val">${s.val}</div><div class="os-label">${s.label}</div></div>`
+      ).join('')}</div>` : '';
+
+      return `<div class="view" id="view-overview">
+        <div class="view-header"><h2>${esc(D.project.name)}</h2>
+          <p>${esc(D.project.description || '')}</p></div>
+        <div class="view-body">
+          ${statsHtml}
+          <div class="overview-grid">${cards}</div>
+        </div></div>`;
+    }
+
+    /* ═══ DOCUMENT VIEWER (Schematics + Draftsman) ═══ */
+    function buildDocViewer(id, title, pages, prefix) {
+      if (!pages.length) return '';
+      const multi = pages.length > 1;
+      const navBtns = multi ? `
+        <button class="tb-btn" onclick="viewers.${prefix}.prev()">&#9664;</button>
+        <span class="page-num mono" id="${prefix}PageNum">1 / ${pages.length}</span>
+        <button class="tb-btn" onclick="viewers.${prefix}.next()">&#9654;</button>` : '';
+
+      const thumbs = multi ? `<div class="doc-pages" id="${prefix}Pages">${pages.map((p,i) =>
+        `<div class="doc-page-thumb${i===0?' active':''}" onclick="viewers.${prefix}.goTo(${i})" title="${esc(p.name||'')}">
+          <span class="num">${p.page_num||i+1}</span></div>`).join('')}</div>` : '';
+
+      const pdfName = pages[0].source_pdf || '';
+      const pdfLink = pdfName ? `<a class="tb-btn" id="${prefix}PdfLink" href="assets/schematics/${pdfName}" download>&#8595; PDF</a>` : '';
+
+      return `<div class="view" id="view-${id}">
+        <div class="doc-viewer">
+          <div class="doc-toolbar">
+            <div class="page-info">${navBtns}
+              <span class="page-name" id="${prefix}Name">${esc(pages[0].name||'')}</span></div>
+            <button class="tb-btn" onclick="viewers.${prefix}.zoomIn()">&#43;</button>
+            <button class="tb-btn" onclick="viewers.${prefix}.zoomOut()">&#8722;</button>
+            <button class="tb-btn" onclick="viewers.${prefix}.fit()">Fit</button>
+            ${pdfLink}
+          </div>
+          <div class="doc-viewport" id="${prefix}Viewport">
+            <div class="vp-hint mono">scroll to zoom &middot; drag to pan</div>
+          </div>
+          ${thumbs}
+        </div></div>`;
+    }
+
+    /* ═══ DocViewer Class ═══ */
+    class DocViewer {
+      constructor(vpId, pages, format) {
+        this.vp = document.getElementById(vpId);
+        this.pages = pages;
+        this.format = format; // 'svg' or 'raster'
+        this.state = { page:0, scale:1, tx:0, ty:0, el:null, dragging:false, lx:0, ly:0, raf:false };
+        this.prefix = vpId.replace('Viewport','');
+        this._bindEvents();
+        this.goTo(0);
+      }
+      _bindEvents() {
+        const vp = this.vp;
+        // Wheel zoom
+        vp.addEventListener('wheel', e => {
+          e.preventDefault();
+          const f = e.deltaY < 0 ? 1.12 : 1/1.12;
+          const r = vp.getBoundingClientRect();
+          this._zoomAt(f, e.clientX - r.left, e.clientY - r.top);
+        }, {passive:false});
+        // Pointer drag
+        vp.addEventListener('pointerdown', e => {
+          if (e.button > 0) return;
+          this.state.dragging = true; this.state.lx = e.clientX; this.state.ly = e.clientY;
+          vp.setPointerCapture(e.pointerId);
+        });
+        vp.addEventListener('pointermove', e => {
+          if (!this.state.dragging) return;
+          this.state.tx += e.clientX - this.state.lx;
+          this.state.ty += e.clientY - this.state.ly;
+          this.state.lx = e.clientX; this.state.ly = e.clientY;
+          this._apply();
+        });
+        vp.addEventListener('pointerup', () => { this.state.dragging = false; });
+        vp.addEventListener('pointercancel', () => { this.state.dragging = false; });
+        // Touch pinch
+        let lastDist = 0;
+        vp.addEventListener('touchstart', e => {
+          if (e.touches.length === 2) lastDist = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+        }, {passive:true});
+        vp.addEventListener('touchmove', e => {
+          if (e.touches.length === 2) {
+            e.preventDefault();
+            const d = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+            if (lastDist > 0) {
+              const r = vp.getBoundingClientRect();
+              const cx = (e.touches[0].clientX+e.touches[1].clientX)/2 - r.left;
+              const cy = (e.touches[0].clientY+e.touches[1].clientY)/2 - r.top;
+              this._zoomAt(d/lastDist, cx, cy);
+            }
+            lastDist = d;
+          }
+        }, {passive:false});
+        // Double-click fit
+        vp.addEventListener('dblclick', () => this.fit());
+        // Hide hint
+        vp.addEventListener('pointerdown', () => {
+          const h = vp.querySelector('.vp-hint');
+          if (h) h.style.opacity = '0';
+        }, {once:true});
+      }
+      async goTo(idx) {
+        if (idx < 0 || idx >= this.pages.length) return;
+        this.state.page = idx;
+        const pg = this.pages[idx];
+        if (this.state.el) this.state.el.remove();
+        const wrapper = document.createElement('div');
+        wrapper.className = 'vp-content';
+
+        if (this.format === 'svg' && pg.svg) {
+          try {
+            const resp = await fetch(encodeURI(pg.svg));
+            const txt = await resp.text();
+            wrapper.innerHTML = txt;
+            const svg = wrapper.querySelector('svg');
+            if (svg) {
+              const vb = svg.viewBox.baseVal;
+              if (vb && vb.width && vb.height) {
+                svg.setAttribute('width', vb.width);
+                svg.setAttribute('height', vb.height);
+              }
+            }
+          } catch(e) { return; }
+        } else {
+          const img = new Image();
+          img.src = encodeURI(pg.preview || pg.thumbnail || '');
+          img.alt = pg.name || '';
+          wrapper.appendChild(img);
+          await new Promise(r => { img.onload = r; img.onerror = r; });
+        }
+        this.vp.insertBefore(wrapper, this.vp.firstChild);
+        this.state.el = wrapper;
+
+        // Update UI
+        const nameEl = document.getElementById(this.prefix+'Name');
+        if (nameEl) nameEl.textContent = pg.name || '';
+        const numEl = document.getElementById(this.prefix+'PageNum');
+        if (numEl) numEl.textContent = `${idx+1} / ${this.pages.length}`;
+        document.querySelectorAll(`#${this.prefix}Pages .doc-page-thumb`).forEach((t,i) => t.classList.toggle('active', i===idx));
+
+        requestAnimationFrame(() => this.fit());
+      }
+      fit() {
+        const el = this.state.el;
+        if (!el || !this.vp) return;
+        const vpW = this.vp.clientWidth, vpH = this.vp.clientHeight;
+        let elW, elH;
+        const svg = el.querySelector('svg');
+        if (svg) {
+          const vb = svg.viewBox.baseVal;
+          elW = vb.width || svg.getBBox().width || 800;
+          elH = vb.height || svg.getBBox().height || 600;
+        } else {
+          const img = el.querySelector('img');
+          elW = img ? img.naturalWidth || 800 : 800;
+          elH = img ? img.naturalHeight || 600 : 600;
+        }
+        const pad = 30;
+        const s = Math.min((vpW-pad*2)/elW, (vpH-pad*2)/elH, 5);
+        this.state.scale = s;
+        this.state.tx = (vpW - elW*s)/2;
+        this.state.ty = (vpH - elH*s)/2;
+        this._apply();
+      }
+      _zoomAt(factor, cx, cy) {
+        const ns = Math.min(Math.max(this.state.scale * factor, 0.05), 30);
+        const r = ns / this.state.scale;
+        this.state.tx = cx - r * (cx - this.state.tx);
+        this.state.ty = cy - r * (cy - this.state.ty);
+        this.state.scale = ns;
+        this._apply();
+      }
+      _apply() {
+        if (this.state.raf) return;
+        this.state.raf = true;
+        requestAnimationFrame(() => {
+          const el = this.state.el;
+          if (el) el.style.transform = `translate3d(${this.state.tx}px,${this.state.ty}px,0) scale(${this.state.scale})`;
+          this.state.raf = false;
+        });
+      }
+      zoomIn() { this._zoomAt(1.3, this.vp.clientWidth/2, this.vp.clientHeight/2); }
+      zoomOut() { this._zoomAt(1/1.3, this.vp.clientWidth/2, this.vp.clientHeight/2); }
+      prev() { this.goTo(this.state.page - 1); }
+      next() { this.goTo(this.state.page + 1); }
+    }
+
+    /* ═══ 3D VIEW ═══ */
+    function build3DView() {
+      return `<div class="view" id="view-pcb3d">
+        <div class="view-header"><h2>3D Model</h2><p>Interactive 3D view of the PCB</p></div>
+        <div class="view-body no-pad fill">
+          <div class="viewer-3d" id="viewer3d">
+            <div class="viewer-3d-fallback" id="viewer3dLoading">
+              <p>Loading 3D viewer...</p>
+            </div>
+          </div>
+        </div></div>`;
+    }
+
+    function init3DViewer() {
+      const container = document.getElementById('viewer3d');
+      if (!D.step) return;
+
+      if (typeof OV !== 'undefined') {
+        start3DViewer(container);
+      } else {
+        // Try loading Online3DViewer from CDN
+        const cdnUrls = [
+          'https://cdn.jsdelivr.net/npm/online-3d-viewer@0.18.0/build/engine/o3dv.min.js',
+          'https://unpkg.com/online-3d-viewer@0.18.0/build/engine/o3dv.min.js',
+        ];
+        tryLoadScript(cdnUrls, 0, container);
+      }
+    }
+
+    function tryLoadScript(urls, idx, container) {
+      if (idx >= urls.length) { show3DFallback(container); return; }
+      const script = document.createElement('script');
+      script.src = urls[idx];
+      script.onload = () => {
+        if (typeof OV !== 'undefined') start3DViewer(container);
+        else tryLoadScript(urls, idx+1, container);
+      };
+      script.onerror = () => tryLoadScript(urls, idx+1, container);
+      document.head.appendChild(script);
+    }
+
+    function start3DViewer(container) {
+      container.innerHTML = '';
+      try {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const bgColor = isDark ? new OV.RGBAColor(26,26,46,255) : new OV.RGBAColor(245,246,248,255);
+        const viewer = new OV.EmbeddedViewer(container, {
+          backgroundColor: bgColor,
+          defaultColor: new OV.RGBColor(180, 180, 190),
+          edgeSettings: new OV.EdgeSettings(true, new OV.RGBColor(0,0,0), 1),
+        });
+        // Prefer GLB (smaller, faster) with STEP as fallback
+        const modelUrl = D.step_glb || D.step;
+        viewer.LoadModelFromUrlList([encodeURI(modelUrl)]);
+      } catch(e) {
+        show3DFallback(container);
+      }
+    }
+
+    function show3DFallback(container) {
+      container.innerHTML = `<div class="viewer-3d-fallback">
+        <p style="font-weight:600">3D Viewer</p>
+        <p style="font-size:.85rem">Could not load 3D viewer. You can download the STEP file or view it online.</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <a href="${D.step}" download class="tb-btn" style="padding:.5rem 1rem">&#8595; Download STEP</a>
+          <a href="https://3dviewer.net" target="_blank" class="tb-btn" style="padding:.5rem 1rem">&#8599; Open 3dviewer.net</a>
+        </div></div>`;
+    }
+
+    /* ═══ BOM ═══ */
+    function buildBOMView() {
+      return `<div class="view" id="view-bom">
+        <div class="view-header"><h2>Bill of Materials</h2></div>
+        <div class="view-body"><div id="bomContainer"><div class="empty-state">Loading BOM...</div></div></div></div>`;
+    }
+
+    let bomData=null, bomSortCol=-1, bomSortAsc=true;
+    async function loadBOM() {
+      try { const r=await fetch(D.bom); bomData=await r.json(); renderBOM(); }
+      catch(e) { document.getElementById('bomContainer').innerHTML='<div class="empty-state">Failed to load BOM.</div>'; }
+    }
+    function renderBOM(filter='') {
+      if(!bomData) return;
+      const c=document.getElementById('bomContainer');
+      const headers=bomData.headers, stats=bomData.stats;
+      let rows=bomData.rows;
+      if(filter) { const q=filter.toLowerCase(); rows=rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(q))); }
+      if(bomSortCol>=0&&bomSortCol<headers.length) {
+        const key=headers[bomSortCol];
+        rows=[...rows].sort((a,b)=>{
+          let va=a[key]||'',vb=b[key]||'';
+          const na=parseFloat(va),nb=parseFloat(vb);
+          if(!isNaN(na)&&!isNaN(nb)) return bomSortAsc?na-nb:nb-na;
+          return bomSortAsc?String(va).localeCompare(String(vb)):String(vb).localeCompare(String(va));
+        });
+      }
+      const thH=headers.map((h,i)=>{
+        const sorted=bomSortCol===i; const arrow=sorted?(bomSortAsc?'&#8593;':'&#8595;'):'&#8597;';
+        return `<th class="${sorted?'sorted':''}" onclick="sortBOM(${i})">${esc(h)} <span class="sort-icon">${arrow}</span></th>`;
+      }).join('');
+      const tbH=rows.map(row=>'<tr>'+headers.map(h=>{
+        let v=row[h]||''; v=filter?highlight(String(v),filter):esc(String(v));
+        return `<td>${v}</td>`;
+      }).join('')+'</tr>').join('');
+      c.innerHTML=`
+        <div class="bom-controls">
+          <div class="bom-search-wrap"><input class="bom-search" type="text" placeholder="Search BOM..." value="${esc(filter)}" oninput="renderBOM(this.value)"></div>
+          ${stats.total_lines?`<div class="bom-stat"><strong>${stats.total_lines}</strong> lines</div>`:''}
+          ${stats.total_components?`<div class="bom-stat"><strong>${stats.total_components}</strong> components</div>`:''}
+          ${stats.unique_parts?`<div class="bom-stat"><strong>${stats.unique_parts}</strong> unique</div>`:''}
+        </div>
+        <div class="bom-table-wrap"><div class="bom-table-scroll">
+          <table class="bom-table"><thead><tr>${thH}</tr></thead>
+          <tbody>${tbH||'<tr><td colspan="'+headers.length+'" class="empty-state">No matches</td></tr>'}</tbody>
+          </table></div></div>`;
+    }
+    function sortBOM(i) { if(bomSortCol===i) bomSortAsc=!bomSortAsc; else{bomSortCol=i;bomSortAsc=true;} const s=document.querySelector('.bom-search'); renderBOM(s?s.value:''); }
+    function highlight(t,q) { const s=esc(t),qe=esc(q); return s.replace(new RegExp(`(${qe.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<span class="bom-highlight">$1</span>'); }
+
+    /* ═══ GERBER VIEWER ═══ */
+    function buildGerberView() {
+      const layers = D.gerber_layers;
+      const layerItems = layers.map((l,i) => `
+        <label class="gerber-layer-item">
+          <input type="checkbox" checked onchange="toggleGerberLayer(${i}, this.checked)">
+          <span class="gerber-color-dot" style="background:${l.color}"></span>
+          <span class="gerber-layer-name" title="${esc(l.file)}">${esc(l.layer_name)}</span>
+        </label>`).join('');
+
+      return `<div class="view" id="view-gerbers">
+        <div class="gerber-viewer">
+          <div class="gerber-layers-panel">
+            <div class="sidebar-label">Layers</div>
+            <label class="gerber-layer-item" style="font-weight:600;margin-bottom:0.25rem">
+              <input type="checkbox" checked onchange="toggleAllGerberLayers(this.checked)">
+              <span class="gerber-layer-name">All Layers</span>
+            </label>
+            ${layerItems}
+          </div>
+          <div class="gerber-viewport-wrap">
+            <div class="gerber-toolbar">
+              <span style="font-size:0.82rem;font-weight:600">Gerber Viewer</span>
+              <span class="spacer"></span>
+              <button class="tb-btn" onclick="gerberZoom(1.3)">&#43;</button>
+              <button class="tb-btn" onclick="gerberZoom(1/1.3)">&#8722;</button>
+              <button class="tb-btn" onclick="gerberFit()">Fit</button>
+            </div>
+            <div class="gerber-viewport" id="gerberViewport"></div>
+          </div>
+        </div></div>`;
+    }
+
+    let gerberState = { scale:1, tx:0, ty:0, raf:false, wrapper:null, layers:[], dragging:false, lx:0, ly:0, imgW:0, imgH:0 };
+
+    function initGerberViewer() {
+      const vp = document.getElementById('gerberViewport');
+      if (!vp || !D.gerber_layers.length) return;
+
+      vp.innerHTML = '';
+      gerberState = { scale:1, tx:0, ty:0, raf:false, wrapper:null,
+        layers: new Array(D.gerber_layers.length).fill(null),
+        dragging:false, lx:0, ly:0, imgW:0, imgH:0 };
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'gv-wrapper';
+      vp.appendChild(wrapper);
+      gerberState.wrapper = wrapper;
+
+      const withPreview = D.gerber_layers.filter(l => l.preview);
+      if (!withPreview.length) return;
+
+      // Fetch all SVGs in parallel (cache:'no-store' avoids cached redirects)
+      // SVGs are pre-normalized to a common viewBox by the build step
+      Promise.all(withPreview.map(l =>
+        fetch(l.preview, {cache:'no-store'}).then(r => r.ok ? r.text() : null).catch(() => null)
+      ))
+        .then(texts => {
+          const entries = [];
+
+          texts.forEach((text, i) => {
+            if (!text) return;
+            const l = withPreview[i];
+            const idx = D.gerber_layers.indexOf(l);
+
+            const tmp = document.createElement('div');
+            tmp.innerHTML = text;
+            const svg = tmp.querySelector('svg');
+            if (!svg) return;
+
+            entries.push({ svg, idx, color: l.color });
+          });
+
+          if (!entries.length) return;
+
+          // Read viewBox from first SVG (all are normalized to the same viewBox)
+          const firstSvg = entries[0].svg;
+          const vb = firstSvg.viewBox.baseVal;
+          const vbW = vb.width || 1000, vbH = vb.height || 1000;
+          const pxH = 2000, pxW = Math.round(pxH * (vbW / vbH));
+          gerberState.imgW = pxW;
+          gerberState.imgH = pxH;
+
+          entries.sort((a, b) => a.idx - b.idx);
+          entries.forEach(({ svg, idx, color }) => {
+            svg.setAttribute('width', pxW);
+            svg.setAttribute('height', pxH);
+            svg.removeAttribute('style');
+
+            const div = document.createElement('div');
+            div.className = 'gv-layer';
+            div.style.color = color;
+            div.appendChild(svg);
+            wrapper.appendChild(div);
+            gerberState.layers[idx] = div;
+          });
+          gerberFit();
+        });
+
+      // Pan/zoom events
+      vp.addEventListener('wheel', e => {
+        e.preventDefault();
+        const f = e.deltaY < 0 ? 1.12 : 1/1.12;
+        const r = vp.getBoundingClientRect();
+        gerberZoomAt(f, e.clientX - r.left, e.clientY - r.top);
+      }, {passive:false});
+
+      vp.addEventListener('pointerdown', e => {
+        if (e.button > 0) return;
+        gerberState.dragging = true; gerberState.lx = e.clientX; gerberState.ly = e.clientY;
+        vp.setPointerCapture(e.pointerId);
+      });
+      vp.addEventListener('pointermove', e => {
+        if (!gerberState.dragging) return;
+        gerberState.tx += e.clientX - gerberState.lx;
+        gerberState.ty += e.clientY - gerberState.ly;
+        gerberState.lx = e.clientX; gerberState.ly = e.clientY;
+        gerberApply();
+      });
+      vp.addEventListener('pointerup', () => { gerberState.dragging = false; });
+      vp.addEventListener('pointercancel', () => { gerberState.dragging = false; });
+      vp.addEventListener('dblclick', () => gerberFit());
+    }
+
+    function gerberZoomAt(factor, cx, cy) {
+      const ns = Math.min(Math.max(gerberState.scale * factor, 0.05), 30);
+      const r = ns / gerberState.scale;
+      gerberState.tx = cx - r * (cx - gerberState.tx);
+      gerberState.ty = cy - r * (cy - gerberState.ty);
+      gerberState.scale = ns;
+      gerberApply();
+    }
+    function gerberZoom(factor) {
+      const vp = document.getElementById('gerberViewport');
+      if (!vp) return;
+      gerberZoomAt(factor, vp.clientWidth/2, vp.clientHeight/2);
+    }
+    function gerberFit() {
+      const vp = document.getElementById('gerberViewport');
+      if (!vp || !gerberState.imgW) return;
+      const vpW = vp.clientWidth, vpH = vp.clientHeight;
+      const iw = gerberState.imgW, ih = gerberState.imgH;
+      const pad = 20;
+      const s = Math.min((vpW-pad*2)/iw, (vpH-pad*2)/ih, 5);
+      gerberState.scale = s;
+      gerberState.tx = (vpW - iw*s)/2;
+      gerberState.ty = (vpH - ih*s)/2;
+      gerberApply();
+    }
+    function gerberApply() {
+      if (gerberState.raf) return;
+      gerberState.raf = true;
+      requestAnimationFrame(() => {
+        if (gerberState.wrapper) {
+          gerberState.wrapper.style.transform = `translate3d(${gerberState.tx}px,${gerberState.ty}px,0) scale(${gerberState.scale})`;
+        }
+        gerberState.raf = false;
+      });
+    }
+    function toggleGerberLayer(idx, visible) {
+      if (gerberState.layers[idx]) gerberState.layers[idx].style.display = visible ? '' : 'none';
+    }
+    function toggleAllGerberLayers(visible) {
+      document.querySelectorAll('.gerber-layers-panel input[type="checkbox"]').forEach(cb => { cb.checked = visible; });
+      gerberState.layers.forEach(l => { if (l) l.style.display = visible ? '' : 'none'; });
+    }
+
+    /* ═══ IBOM ═══ */
+    function buildIBOMView() {
+      return `<div class="view" id="view-ibom">
+        <div class="view-header"><h2>Interactive BOM</h2><p>Component placement and BOM viewer</p></div>
+        <div class="view-body no-pad fill">
+          <iframe class="ibom-frame" src="${D.ibom}" loading="lazy" allow="fullscreen"></iframe>
+        </div></div>`;
+    }
+
+    /* ═══ DOWNLOADS ═══ */
+    function buildDownloadsView() {
+      const icons = {'Schematic PDF':'&#9707;','Draftsman Drawing':'&#9651;','3D Model (STEP)':'&#11042;','Bill of Materials':'&#9776;','Fabrication Files':'&#9638;','Pick & Place':'&#8853;','NC Drill Files':'&#9673;','ODB++ Package':'&#9635;'};
+      const cards = D.downloads.map(d =>
+        `<a class="download-card" href="${d.path}" download>
+          <div class="download-icon">${icons[d.type]||'&#8595;'}</div>
+          <div class="download-info"><div class="name">${esc(d.name)}</div>
+            <div class="meta mono">${d.type} &middot; ${fmtSize(d.size)}</div></div></a>`
+      ).join('');
+      return `<div class="view" id="view-downloads">
+        <div class="view-header"><h2>Downloads</h2><p>All project files available for download</p></div>
+        <div class="view-body"><div class="download-grid">${cards}</div></div></div>`;
+    }
+
+    /* ═══ KEYBOARD ═══ */
+    document.addEventListener('keydown', e => {
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+      const v = currentView;
+      if (v === 'schematics' && viewers.sch) {
+        if (e.key === 'ArrowLeft') viewers.sch.prev();
+        if (e.key === 'ArrowRight') viewers.sch.next();
+        if (e.key === '+' || e.key === '=') viewers.sch.zoomIn();
+        if (e.key === '-') viewers.sch.zoomOut();
+        if (e.key === '0') viewers.sch.fit();
+      }
+      if (v === 'draftsman' && viewers.draft) {
+        if (e.key === 'ArrowLeft') viewers.draft.prev();
+        if (e.key === 'ArrowRight') viewers.draft.next();
+        if (e.key === '+' || e.key === '=') viewers.draft.zoomIn();
+        if (e.key === '-') viewers.draft.zoomOut();
+        if (e.key === '0') viewers.draft.fit();
+      }
+    });
+
+    /* ═══ UTIL ═══ */
+    function esc(s) { if (!s) return ''; const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+    function fmtSize(b) { if(!b) return ''; const u=['B','KB','MB','GB']; let i=0; while(b>=1024&&i<u.length-1){b/=1024;i++;} return `${b.toFixed(b<10&&i>0?1:0)} ${u[i]}`; }
+  </script>
+</body>
+</html>

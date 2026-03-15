@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "altium-publish"
+version = "0.1.0"
+description = "Publish Altium Designer projects to GitHub Pages with interactive viewers"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+full = [
+    "PyMuPDF>=1.23",
+    "Pillow>=10.0",
+    "openpyxl>=3.1",
+    "cadquery",
+    "trimesh",
+    "pyglet<2",
+    "pyrender",
+    "numpy",
+    "scipy",
+    "cascadio",
+]
+dev = [
+    "pytest",
+    "ruff",
+]
+
+[project.scripts]
+altium-publish = "altium_publish.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["altium_publish*"]
+
+[tool.setuptools.package-data]
+altium_publish = ["templates/*.html"]
