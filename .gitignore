@@ -5,3 +5,6 @@ build/
 .eggs/
 *.pyc
 .venv/
+
+.DS_Store
+.stfolder

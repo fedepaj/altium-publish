@@ -82,7 +82,8 @@ Release/
 ├── DOCS/
 │   ├── Schematic Print/    ← PDF schematics
 │   ├── PCBDrawing/         ← Draftsman PDF
-│   └── ExportSTEP/         ← 3D STEP model
+│   ├── ExportSTEP/         ← 3D STEP model
+|   └── IBOM/               ← From InteractiveHTMLBOM4Altium2 Script
 └── FAB/
     ├── BOM/                ← Bill of Materials
     ├── Gerber/             ← Legacy Gerber (RS-274X)
