@@ -1,4 +1,4 @@
-# altium-publish
+# ⬡ altium-publish
 
 **Publish your Altium Designer PCB projects as beautiful, interactive GitHub Pages.**
 
