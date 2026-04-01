@@ -210,10 +210,12 @@ def generate_step_gif(
     bounds = scene.bounds
     center = (bounds[0] + bounds[1]) / 2.0
     extents = bounds[1] - bounds[0]
-    max_ext = float(max(extents))
-    distance = max_ext * 1.8
+    # Use bounding-sphere radius so the model always fits regardless of orientation
+    bsphere_r = float(np.linalg.norm(extents)) / 2.0
+    yfov = np.radians(40)
+    distance = (bsphere_r / np.sin(yfov / 2.0)) * 1.8  # 20 % margin
 
-    camera = pyrender.PerspectiveCamera(yfov=np.radians(40))
+    camera = pyrender.PerspectiveCamera(yfov=yfov)
     cam_node = py_scene.add(camera)
 
     renderer = pyrender.OffscreenRenderer(w, h)
